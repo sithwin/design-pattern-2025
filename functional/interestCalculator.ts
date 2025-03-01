@@ -1,4 +1,29 @@
 // functional/interestCalculator.ts
+
+/**
+ * Retries a function with exponential backoff
+ * @param fn Function to retry
+ * @param maxRetries Maximum number of retries
+ * @param delayMs Delay between retries in milliseconds
+ * @returns Promise that resolves with the function's result or rejects after max retries
+ */
+const retry = async <T>(
+  fn: () => Promise<T>,
+  maxRetries: number,
+  delayMs: number,
+  currentAttempt = 1
+): Promise<T> => {
+  try {
+    return await fn();
+  } catch (error) {
+    if (currentAttempt >= maxRetries) {
+      throw error;
+    }
+    await new Promise((resolve) => setTimeout(resolve, delayMs));
+    return retry(fn, maxRetries, delayMs, currentAttempt + 1);
+  }
+};
+
 type DailyBalance = number;
 
 const DAILY_THRESHOLD = 5000;
@@ -33,4 +58,71 @@ const exampleBalances: DailyBalance[] = [
 const monthlyInterest = calculateMonthlyInterest(exampleBalances);
 console.log(`Total monthly interest: $${monthlyInterest.toFixed(2)}`);
 
-export { calculateMonthlyInterest };
+const deposit = (balance: number, amount: number): number => {
+  if (amount <= 0) {
+    throw new Error("Deposit amount must be positive");
+  }
+  return balance + amount;
+};
+
+const withdraw = (balance: number, amount: number): number => {
+  if (amount <= 0) {
+    throw new Error("Withdrawal amount must be positive");
+  }
+  if (amount > balance) {
+    throw new Error("Insufficient funds");
+  }
+  return balance - amount;
+};
+
+const calculateFinalBalance = (
+  operations: Array<{ type: "deposit" | "withdraw"; amount: number }>,
+  if type == "opening" 
+    initialBalance = amount
+): number => {
+  return operations.reduce((balance, op) => {
+    try {
+      return op.type === "deposit"
+        ? deposit(balance, op.amount)
+        : withdraw(balance, op.amount);
+    } catch (error) {
+      console.error(`Operation failed: ${error.message}`);
+      return balance;
+    }
+  }, initialBalance);
+};
+
+// Example usage of calculateFinalBalance
+const exampleOperations: Array<{
+  type: "deposit" | "withdraw" | "opening";
+  amount: number;
+}> = [
+  { type: "opening", amount: 1000 },
+  { type: "deposit", amount: 500 },
+  { type: "withdraw", amount: 200 },
+  { type: "deposit", amount: 1000 },
+  { type: "withdraw", amount: 300 },
+];
+
+// Basic usage
+const finalBalance = calculateFinalBalance(exampleOperations);
+console.log(`Final balance: $${finalBalance}`); // Final balance: $2000
+
+// With custom initial balance
+const customBalance = calculateFinalBalance(exampleOperations, 2000);
+console.log(`Custom initial balance result: $${customBalance}`); // Custom initial balance result: $3000
+
+// Example with error handling
+const riskyOperations: Array<{
+  type: "deposit" | "withdraw" | "opening";
+  amount: number;
+}> = [
+  { type: "deposit", amount: 500 },
+  { type: "withdraw", amount: 2000 }, // This will fail due to insufficient funds
+  { type: "deposit", amount: 1000 },
+];
+
+const safeBalance = calculateFinalBalance(riskyOperations);
+console.log(`Safe balance after failed operation: $${safeBalance}`); // Safe balance after failed operation: $1300
+
+export { calculateMonthlyInterest, retry, calculateFinalBalance };

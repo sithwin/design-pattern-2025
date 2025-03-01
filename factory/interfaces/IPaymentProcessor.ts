@@ -1,5 +1,9 @@
 export abstract class PaymentProcessor {
-  constructor(protected config: any) {}
+  public config: any;
+
+  constructor(config: any) {
+    this.config = config;
+  }
 
   abstract processPayment(amount: number): Promise<void>;
   abstract refundPayment(amount: number): Promise<void>;

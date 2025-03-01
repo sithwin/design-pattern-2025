@@ -1,18 +1,19 @@
 import { PaymentProcessor } from "../interfaces/IPaymentProcessor";
 
-export class PaypalProcessor extends PaymentProcessor {
+export class PayPalProcessor extends PaymentProcessor {
   constructor(config: any) {
     super(config);
   }
+
   async processPayment(amount: number): Promise<void> {
-    // PayPal specific payment processing logic
+    // Implementation for PayPal payment
     console.log(`Processing PayPal payment of $${amount}`);
-    // Implementation would call PayPal API here
+    // Actual PayPal payment processing logic would go here
   }
 
   async refundPayment(amount: number): Promise<void> {
-    // PayPal specific refund logic
-    console.log(`Refunding PayPal payment of $${amount}`);
-    // Implementation would call PayPal API here
+    // Implementation for PayPal refund
+    console.log(`Refunding $${amount} via PayPal`);
+    // Actual PayPal refund logic would go here
   }
 }

@@ -29,6 +29,12 @@ class PaymentExampleRunner {
           accountNumber: process.env.BANK_ACCOUNT_NUMBER,
           routingNumber: process.env.BANK_ROUTING_NUMBER,
         };
+      case "creditdebit":
+        return {
+          cardNumber: process.env.CARD_NUMBER,
+          expirationDate: process.env.CARD_EXPIRATION,
+          cvv: process.env.CARD_CVV,
+        };
       default:
         throw new Error(`Unsupported processor type: ${processorType}`);
     }
@@ -73,6 +79,7 @@ const paymentExamples: PaymentExample[] = [
   { processorType: "paypal", amount: 100 },
   { processorType: "stripe", amount: 200 },
   { processorType: "banktransfer", amount: 300 },
+  { processorType: "creditdebit", amount: 400 },
 ];
 
 // Execute examples

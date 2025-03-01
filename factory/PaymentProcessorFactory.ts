@@ -84,7 +84,15 @@ mediator.on("error", (error) => {
 // Register default processors
 mediator.registerProcessor(
   "paypal",
-  require("./processors/PaypalProcessor").PaypalProcessor
+  require("./processors/PaypalProcessor").PayPalProcessor
+);
+mediator.registerProcessor(
+  "credit",
+  require("./processors/CreditProcessor").CreditProcessor
+);
+mediator.registerProcessor(
+  "debit",
+  require("./processors/DebitProcessor").DebitProcessor
 );
 mediator.registerProcessor(
   "stripe",
