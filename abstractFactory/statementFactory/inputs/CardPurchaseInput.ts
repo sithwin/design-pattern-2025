@@ -12,8 +12,14 @@ export class CardPurchaseInput implements IStatementInput {
   ) {}
 
   getStatementLine(): string {
-    return `${this.date.toISOString()} | ${this.type} | -$${this.amount.toFixed(
+    return `${this.date.toISOString()} | ${this.type} | $${this.amount.toFixed(
       2
-    )} | ${this.merchant} (${this.cardLastFour}) | ${this.description}`;
+    )} | ${this.description}`;
+  }
+
+  getDetails(): string {
+    return `Card purchase of $${this.amount.toFixed(
+      2
+    )} on ${this.date.toLocaleDateString()}: ${this.description}`;
   }
 }

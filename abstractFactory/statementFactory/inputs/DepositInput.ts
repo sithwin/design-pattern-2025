@@ -14,4 +14,10 @@ export class DepositInput implements IStatementInput {
       2
     )} | ${this.description}`;
   }
+
+  getDetails(): string {
+    return `Deposit of $${this.amount.toFixed(
+      2
+    )} on ${this.date.toLocaleDateString()}: ${this.description}`;
+  }
 }

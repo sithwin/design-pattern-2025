@@ -3,5 +3,5 @@ export interface IStatementInput {
   amount: number;
   date: Date;
   description: string;
-  getStatementLine(): string;
+  getDetails(): string;
 }

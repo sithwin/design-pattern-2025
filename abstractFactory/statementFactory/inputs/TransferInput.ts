@@ -19,4 +19,12 @@ export class TransferInput implements IStatementInput {
       this.description
     }`;
   }
+
+  getDetails(): string {
+    return `Transfer of $${this.amount.toFixed(2)} from ${
+      this.fromAccount
+    } to ${this.toAccount} on ${this.date.toLocaleDateString()}: ${
+      this.description
+    }`;
+  }
 }
